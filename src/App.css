@@ -1,0 +1,398 @@
+/* ── Layout ──────────────────────────────────────────────── */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  height: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 14px;
+  color: #1a1a2e;
+  background: #0f0f1a;
+}
+
+.app {
+  display: flex;
+  height: 100%;
+}
+
+/* ── Sidebar ─────────────────────────────────────────────── */
+
+.sidebar {
+  width: 340px;
+  min-width: 340px;
+  height: 100%;
+  overflow-y: auto;
+  background: #16213e;
+  color: #e0e0e0;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-header {
+  padding: 16px 16px 8px;
+  border-bottom: 1px solid #1a1a3e;
+}
+
+.sidebar-header h1 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #3498db;
+  letter-spacing: 0.5px;
+}
+
+.sidebar-subtitle {
+  font-size: 0.75rem;
+  color: #7f8c8d;
+  margin-top: 2px;
+}
+
+.sidebar-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px 0;
+}
+
+/* ── Control groups ──────────────────────────────────────── */
+
+.control-group {
+  padding: 10px 16px;
+  border-bottom: 1px solid #1a1a3e;
+}
+
+.control-label {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #7f8c8d;
+  margin-bottom: 8px;
+}
+
+/* ── Aircraft select ─────────────────────────────────────── */
+
+.aircraft-select {
+  width: 100%;
+  padding: 8px 10px;
+  background: #1a1a3e;
+  color: #e0e0e0;
+  border: 1px solid #2c3e6d;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.aircraft-select:focus {
+  outline: none;
+  border-color: #3498db;
+}
+
+/* ── Sliders ─────────────────────────────────────────────── */
+
+.slider-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.slider-label {
+  font-size: 0.75rem;
+  color: #95a5a6;
+  min-width: 48px;
+}
+
+.slider-row input[type="range"] {
+  flex: 1;
+  height: 4px;
+  -webkit-appearance: none;
+  appearance: none;
+  background: #2c3e6d;
+  border-radius: 2px;
+  outline: none;
+}
+
+.slider-row input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #3498db;
+  cursor: pointer;
+}
+
+.slider-value {
+  font-size: 0.75rem;
+  color: #bdc3c7;
+  min-width: 68px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── MTOW bar ────────────────────────────────────────────── */
+
+.mtow-bar {
+  margin-top: 8px;
+}
+
+.mtow-bar-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.7rem;
+  color: #95a5a6;
+  margin-bottom: 3px;
+}
+
+.mtow-bar-track {
+  height: 6px;
+  background: #1a1a3e;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.mtow-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.15s ease, background-color 0.15s ease;
+}
+
+.weight-breakdown {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.65rem;
+  color: #7f8c8d;
+  margin-top: 6px;
+}
+
+/* ── Wind ────────────────────────────────────────────────── */
+
+.wind-label {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #bdc3c7;
+  margin-top: 2px;
+}
+
+/* ── Unit toggles ────────────────────────────────────────── */
+
+.toggle-row {
+  display: flex;
+  gap: 8px;
+}
+
+.toggle-group {
+  display: flex;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid #2c3e6d;
+}
+
+.toggle-btn {
+  padding: 4px 10px;
+  font-size: 0.75rem;
+  border: none;
+  background: #1a1a3e;
+  color: #95a5a6;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.toggle-btn.active {
+  background: #3498db;
+  color: #fff;
+}
+
+.toggle-btn:hover:not(.active) {
+  background: #2c3e6d;
+}
+
+/* ── Airport search ──────────────────────────────────────── */
+
+.airport-search {
+  position: relative;
+  margin-bottom: 8px;
+}
+
+.search-label {
+  font-size: 0.7rem;
+  color: #95a5a6;
+  margin-bottom: 3px;
+  display: block;
+}
+
+.search-input-wrapper {
+  position: relative;
+}
+
+.search-input {
+  width: 100%;
+  padding: 7px 28px 7px 10px;
+  background: #1a1a3e;
+  color: #e0e0e0;
+  border: 1px solid #2c3e6d;
+  border-radius: 6px;
+  font-size: 0.82rem;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #3498db;
+}
+
+.search-input::placeholder {
+  color: #4a5568;
+}
+
+.search-clear {
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #7f8c8d;
+  font-size: 1.1rem;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.search-results {
+  position: absolute;
+  z-index: 1000;
+  width: 100%;
+  max-height: 220px;
+  overflow-y: auto;
+  background: #1a1a3e;
+  border: 1px solid #2c3e6d;
+  border-top: none;
+  border-radius: 0 0 6px 6px;
+  list-style: none;
+}
+
+.search-results li {
+  padding: 6px 10px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  border-bottom: 1px solid #16213e;
+}
+
+.search-results li:hover {
+  background: #2c3e6d;
+}
+
+.search-results li:last-child {
+  border-bottom: none;
+}
+
+.search-icao {
+  color: #7f8c8d;
+  font-size: 0.7rem;
+}
+
+.search-detail {
+  font-size: 0.7rem;
+  color: #95a5a6;
+}
+
+/* ── Feasibility ─────────────────────────────────────────── */
+
+.feasibility-result {
+  margin-top: 8px;
+  padding: 10px;
+  background: #1a1a3e;
+  border-radius: 6px;
+  text-align: center;
+}
+
+.feasibility-distance {
+  font-size: 0.8rem;
+  color: #bdc3c7;
+  margin-bottom: 6px;
+}
+
+.feasibility-badge {
+  display: inline-block;
+  padding: 4px 20px;
+  border-radius: 4px;
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: 2px;
+}
+
+.feasibility-badge.go {
+  background: #27ae60;
+  color: #fff;
+}
+
+.feasibility-badge.no-go {
+  background: #e74c3c;
+  color: #fff;
+}
+
+.feasibility-margin {
+  font-size: 0.75rem;
+  color: #95a5a6;
+  margin-top: 6px;
+}
+
+/* ── Results panel ───────────────────────────────────────── */
+
+.results-panel .result-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  padding: 3px 0;
+  border-bottom: 1px solid #1a1a3e;
+}
+
+.results-panel .result-row:last-child {
+  border-bottom: none;
+}
+
+.results-panel .result-value {
+  font-weight: 600;
+  color: #3498db;
+  font-variant-numeric: tabular-nums;
+}
+
+.results-panel .result-row.sub {
+  font-size: 0.7rem;
+  color: #7f8c8d;
+  padding-left: 12px;
+}
+
+.results-panel .result-row.sub span:last-child {
+  color: #95a5a6;
+}
+
+/* ── Map ─────────────────────────────────────────────────── */
+
+.main {
+  flex: 1;
+  position: relative;
+}
+
+.map-container {
+  width: 100%;
+  height: 100%;
+}
+
+/* ── Scrollbar ───────────────────────────────────────────── */
+
+.sidebar-content::-webkit-scrollbar {
+  width: 4px;
+}
+
+.sidebar-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.sidebar-content::-webkit-scrollbar-thumb {
+  background: #2c3e6d;
+  border-radius: 2px;
+}
