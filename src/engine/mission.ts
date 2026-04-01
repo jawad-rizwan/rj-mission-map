@@ -44,6 +44,13 @@ export interface MissionResult {
   tripFuel: number;
   totalReserve: number;
   climbDistNm: number;
+  // Time
+  flightTimeMin: number;       // Total trip time (TO + climb + cruise) [min]
+  climbTimeMin: number;
+  cruiseTimeMin: number;
+  // Fuel consumption
+  avgFuelFlowLbHr: number;     // Average cruise fuel flow [lb/hr]
+  specificRangeNmLb: number;   // Cruise specific range [nm/lb] (fuel efficiency)
 }
 
 // ── Climb integration ─────────────────────────────────────────
@@ -51,6 +58,7 @@ export interface MissionResult {
 interface ClimbResult {
   fuelBurned: number;
   distanceNm: number;
+  timeSec: number;
   wEnd: number;
 }
 
@@ -68,6 +76,7 @@ function computeClimb(
   let w = wStart;
   let totalFuel = 0;
   let totalDist = 0;
+  let totalTime = 0;
   let h = hStart;
 
   while (h < hEnd) {
@@ -106,11 +115,12 @@ function computeClimb(
 
     totalFuel += fuelStep;
     totalDist += distFt;
+    totalTime += dt;
     w -= fuelStep;
     h += step;
   }
 
-  return { fuelBurned: totalFuel, distanceNm: totalDist / NM_TO_FT, wEnd: w };
+  return { fuelBurned: totalFuel, distanceNm: totalDist / NM_TO_FT, timeSec: totalTime, wEnd: w };
 }
 
 // ── Reserve fuel computation ──────────────────────────────────
@@ -190,6 +200,8 @@ export function computeRange(
       reserveBreakdown: { fuelLand1: 0, fuelGA: 0, fuelDivert: 0, fuelHold: 0, fuelLand2: 0 },
     },
     tripFuel: 0, totalReserve: 0, climbDistNm: 0,
+    flightTimeMin: 0, climbTimeMin: 0, cruiseTimeMin: 0,
+    avgFuelFlowLbHr: 0, specificRangeNmLb: 0,
   };
 
   // Total usable mission fuel
@@ -247,6 +259,18 @@ export function computeRange(
       reserveResult = computeReserves(ac, wAtLanding, windKts);
       reserveFuel = reserveResult.total;
     } else {
+      // Flight time: TO (5 min) + climb + cruise
+      const toTimeMin = 5;
+      const climbTimeMin = climb.timeSec / 60;
+      const cruiseTimeMin = vGroundKts > 0 ? (groundRangeNm / vGroundKts) * 60 : 0;
+      const flightTimeMin = toTimeMin + climbTimeMin + cruiseTimeMin;
+
+      // Fuel consumption: average cruise fuel flow and specific range
+      const cruiseHr = cruiseTimeMin / 60;
+      const avgFuelFlowLbHr = cruiseHr > 0 ? cruiseContingencyFuel / cruiseHr : 0;
+      const specificRangeNmLb = cruiseContingencyFuel > 0
+        ? groundRangeNm / cruiseContingencyFuel : 0;
+
       return {
         feasible: true,
         rangeNm: Math.max(0, rangeNm),
@@ -262,6 +286,11 @@ export function computeRange(
         tripFuel: fuelTO + fuelClimb + cruiseContingencyFuel,
         totalReserve: reserveFuel,
         climbDistNm,
+        flightTimeMin,
+        climbTimeMin,
+        cruiseTimeMin,
+        avgFuelFlowLbHr,
+        specificRangeNmLb,
       };
     }
   }

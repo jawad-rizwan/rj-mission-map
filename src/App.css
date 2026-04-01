@@ -342,6 +342,16 @@ html, body, #root {
 
 /* ── Results panel ───────────────────────────────────────── */
 
+.result-section-label {
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: #5a6a7a;
+  margin-top: 8px;
+  margin-bottom: 2px;
+}
+
 .results-panel .result-row {
   display: flex;
   justify-content: space-between;
