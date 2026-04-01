@@ -334,6 +334,25 @@ html, body, #root {
   color: #fff;
 }
 
+.route-metrics {
+  margin: 8px 0 4px;
+  text-align: left;
+}
+
+.route-metric-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  color: #bdc3c7;
+  padding: 2px 0;
+}
+
+.route-metric-row span:last-child {
+  font-weight: 600;
+  color: #3498db;
+  font-variant-numeric: tabular-nums;
+}
+
 .feasibility-margin {
   font-size: 0.75rem;
   color: #95a5a6;

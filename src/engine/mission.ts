@@ -324,3 +324,73 @@ export function checkFeasibility(
     mission,
   };
 }
+
+// ── Route-specific computation ────────────────────────────────
+
+export interface RouteResult {
+  flightTimeMin: number;
+  climbTimeMin: number;
+  cruiseTimeMin: number;
+  fuelRequired: number;      // Total mission fuel for this route [lb]
+  cruiseFuel: number;
+}
+
+/**
+ * Compute flight time and fuel for a specific route distance.
+ * Uses the same climb + Breguet model but for a known distance
+ * instead of burning all available fuel.
+ */
+export function computeRouteMetrics(
+  ac: AircraftConfig,
+  payloadLb: number,
+  fuelLb: number,
+  routeDistNm: number,
+  windKts: number = 0,
+): RouteResult | null {
+  const acK = K(ac);
+  const w0 = ac.we + crewWeight(ac) + payloadLb + fuelLb;
+
+  // Seg 1: TO
+  const w1 = w0 * 0.97;
+  const fuelTO = w0 - w1;
+
+  // Seg 2: Climb
+  const climb = computeClimb(ac, w1);
+  const w2 = climb.wEnd;
+  const climbTimeMin = climb.timeSec / 60;
+
+  // Cruise distance = route distance minus climb distance credit
+  const cruiseDistNm = Math.max(0, routeDistNm - climb.distanceNm);
+
+  // Ground speed and TAS
+  const vGroundKts = groundSpeedKts(ac.cruiseMach, ac.cruiseAlt, windKts);
+  if (vGroundKts <= 0) return null;
+  const vTasKts = tasFromMach(ac.cruiseMach, ac.cruiseAlt) / KTS_TO_FPS;
+  const vTasFps = tasFromMach(ac.cruiseMach, ac.cruiseAlt);
+
+  // Cruise L/D
+  const q = dynamicPressureMach(ac.cruiseMach, ac.cruiseAlt);
+  const cl = (w2 / ac.wingArea) / q;
+  const cd = ac.cd0 + acK * cl * cl;
+  const ld = cl / cd;
+
+  // Air distance for this ground distance
+  const airDistNm = cruiseDistNm * (vTasKts / vGroundKts);
+
+  // Breguet: fuel = W2 * (1 - exp(-R_air * C / (V_TAS * LD)))
+  const wRatio = Math.exp(-(airDistNm * NM_TO_FT) * (ac.tsfcCruise / 3600) / (vTasFps * ld));
+  const cruiseFuel = w2 * (1 - wRatio);
+
+  // Times
+  const cruiseTimeMin = (cruiseDistNm / vGroundKts) * 60;
+  const toTimeMin = 5;
+  const flightTimeMin = toTimeMin + climbTimeMin + cruiseTimeMin;
+
+  return {
+    flightTimeMin,
+    climbTimeMin,
+    cruiseTimeMin,
+    fuelRequired: fuelTO + climb.fuelBurned + cruiseFuel,
+    cruiseFuel,
+  };
+}
