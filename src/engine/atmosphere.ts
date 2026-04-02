@@ -49,3 +49,39 @@ export function thrustLapse(hFt: number, bpr: number = 9.0): number {
   const exp = bpr >= 5.0 ? 0.7 : 0.8;
   return Math.pow(sigma(hFt), exp);
 }
+
+// ── Field Performance Atmosphere Extensions ──────────────────────
+
+/** ISA with temperature deviation. Pressure unchanged; only density affected. */
+export function isaWithDeviation(hFt: number, deltaIsaC: number): IsaResult {
+  const std = isa(hFt);
+  const dT_R = deltaIsaC * 1.8; // Celsius → Rankine offset
+  const T_actual = std.T + dT_R;
+  const rho_actual = std.P / (R_AIR * T_actual);
+  const a_actual = Math.sqrt(GAMMA * R_AIR * T_actual);
+  return { T: T_actual, P: std.P, rho: rho_actual, a: a_actual };
+}
+
+/** Density altitude [ft] — ISA altitude with the same density. */
+export function densityAltitude(hFt: number, deltaIsaC: number): number {
+  const { rho } = isaWithDeviation(hFt, deltaIsaC);
+  const ratio = rho / RHO_SL;
+  // Invert troposphere density: rho/rho_SL = (1 - LAPSE*h/T_SL)^4.2561
+  return (T_SL / LAPSE) * (1 - Math.pow(ratio, 1 / 4.2561));
+}
+
+/**
+ * Thrust at altitude with ISA deviation (BPR-dependent lapse).
+ * Uses n=0.82 for BPR=9 (PW1000G class) per rj-flight-performance model.
+ * Separate from thrustLapse() used by the mission module to avoid changing range results.
+ */
+export function thrustAtAltitude(
+  tSL: number, hFt: number, bpr: number, deltaIsaC: number = 0,
+): number {
+  const { rho } = isaWithDeviation(hFt, deltaIsaC);
+  const sig = rho / RHO_SL;
+  const exp = Math.min(0.90, Math.max(0.70, 0.70 + (bpr - 3.0) * 0.02));
+  let ratio = Math.pow(sig, exp);
+  if (hFt > TROPO) ratio *= 0.85;
+  return tSL * ratio;
+}

@@ -10,6 +10,8 @@ export interface AppState {
   departureIcao: string | null;
   arrivalIcao: string | null;
   unitSystem: UnitSystem;
+  deltaIsaC: number;
+  surfaceTypeId: string;
 }
 
 export type AppAction =
@@ -21,7 +23,9 @@ export type AppAction =
   | { type: 'SET_ARRIVAL'; icao: string | null }
   | { type: 'SET_DISTANCE_UNIT'; value: UnitSystem['distance'] }
   | { type: 'SET_WEIGHT_UNIT'; value: UnitSystem['weight'] }
-  | { type: 'SET_SPEED_UNIT'; value: UnitSystem['speed'] };
+  | { type: 'SET_SPEED_UNIT'; value: UnitSystem['speed'] }
+  | { type: 'SET_DELTA_ISA'; value: number }
+  | { type: 'SET_SURFACE_TYPE'; id: string };
 
 function clampFuelPayload(
   key: AircraftKey,
@@ -48,6 +52,8 @@ export function initialState(): AppState {
     departureIcao: null,
     arrivalIcao: null,
     unitSystem: DEFAULT_UNITS,
+    deltaIsaC: 0,
+    surfaceTypeId: 'dry',
   };
 }
 
@@ -84,6 +90,10 @@ export function appReducer(state: AppState, action: AppAction): AppState {
       return { ...state, unitSystem: { ...state.unitSystem, weight: action.value } };
     case 'SET_SPEED_UNIT':
       return { ...state, unitSystem: { ...state.unitSystem, speed: action.value } };
+    case 'SET_DELTA_ISA':
+      return { ...state, deltaIsaC: Math.max(-40, Math.min(40, action.value)) };
+    case 'SET_SURFACE_TYPE':
+      return { ...state, surfaceTypeId: action.id };
     default:
       return state;
   }

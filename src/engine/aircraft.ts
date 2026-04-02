@@ -40,6 +40,16 @@ export interface AircraftConfig {
   // Mission
   designRange: number;     // nm
   alternateRange: number;  // nm
+
+  // Field performance
+  clMaxTO: number;         // CL_max takeoff config
+  clMaxL: number;          // CL_max landing config
+  clMaxClean: number;      // CL_max clean
+  clGround: number;        // CL during ground roll
+  muRoll: number;          // rolling friction (hard/dry)
+  muBrake: number;         // braking friction (hard/dry)
+  hObstacleTO: number;     // takeoff obstacle height [ft]
+  hObstacleL: number;      // landing obstacle height [ft]
 }
 
 // Derived properties (computed once, not stored)
@@ -90,6 +100,14 @@ export const ZRJ50: AircraftConfig = {
   trappedFuelFactor: 1.06,
   designRange: 1800,
   alternateRange: 100,
+  clMaxTO: 1.99,
+  clMaxL: 2.62,
+  clMaxClean: 1.16,
+  clGround: 0.10,
+  muRoll: 0.03,
+  muBrake: 0.50,
+  hObstacleTO: 35.0,
+  hObstacleL: 50.0,
 };
 
 export const ZRJ70: AircraftConfig = {
@@ -117,6 +135,14 @@ export const ZRJ70: AircraftConfig = {
   trappedFuelFactor: 1.06,
   designRange: 1800,
   alternateRange: 100,
+  clMaxTO: 1.99,
+  clMaxL: 2.62,
+  clMaxClean: 1.16,
+  clGround: 0.10,
+  muRoll: 0.03,
+  muBrake: 0.50,
+  hObstacleTO: 35.0,
+  hObstacleL: 50.0,
 };
 
 export const ZRJ100: AircraftConfig = {
@@ -144,6 +170,14 @@ export const ZRJ100: AircraftConfig = {
   trappedFuelFactor: 1.06,
   designRange: 1200,
   alternateRange: 100,
+  clMaxTO: 1.99,
+  clMaxL: 2.62,
+  clMaxClean: 1.16,
+  clGround: 0.10,
+  muRoll: 0.03,
+  muBrake: 0.50,
+  hObstacleTO: 35.0,
+  hObstacleL: 50.0,
 };
 
 export const ALL_AIRCRAFT: Record<string, AircraftConfig> = {
