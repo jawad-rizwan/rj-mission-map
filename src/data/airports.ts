@@ -179,6 +179,7 @@ export const AIRPORTS: Airport[] = [
   { iata: "YSB", icao: "CYSB", name: "Sudbury Airport", city: "Sudbury", country: "CA", lat: 46.6250, lon: -80.7989, elevation_ft: 1141 },
   { iata: "YKA", icao: "CYKA", name: "Kamloops Airport", city: "Kamloops", country: "CA", lat: 50.7022, lon: -120.4444, elevation_ft: 1133 },
   { iata: "YLW", icao: "CYLW", name: "Kelowna International Airport", city: "Kelowna", country: "CA", lat: 49.9561, lon: -119.3778, elevation_ft: 1409 },
+  { iata: "YFB", icao: "CYFB", name: "Iqaluit Airport", city: "Iqaluit", country: "CA", lat: 63.7564, lon: -68.5558, elevation_ft: 110 },
 
   // ── North America: Mexico ─────────────────────────────────────────────
   { iata: "MEX", icao: "MMMX", name: "Mexico City International Airport", city: "Mexico City", country: "MX", lat: 19.4363, lon: -99.0721, elevation_ft: 7316 },
@@ -246,6 +247,7 @@ export const AIRPORTS: Airport[] = [
   { iata: "LHR", icao: "EGLL", name: "London Heathrow Airport", city: "London", country: "GB", lat: 51.4700, lon: -0.4543, elevation_ft: 83 },
   { iata: "LGW", icao: "EGKK", name: "London Gatwick Airport", city: "London", country: "GB", lat: 51.1537, lon: -0.1821, elevation_ft: 202 },
   { iata: "STN", icao: "EGSS", name: "London Stansted Airport", city: "London", country: "GB", lat: 51.8860, lon: 0.2389, elevation_ft: 348 },
+  { iata: "LCY", icao: "EGLC", name: "London City Airport", city: "London", country: "GB", lat: 51.5048, lon: 0.0503, elevation_ft: 19 },
   { iata: "LTN", icao: "EGGW", name: "London Luton Airport", city: "London", country: "GB", lat: 51.8747, lon: -0.3684, elevation_ft: 526 },
   { iata: "MAN", icao: "EGCC", name: "Manchester Airport", city: "Manchester", country: "GB", lat: 53.3537, lon: -2.2750, elevation_ft: 257 },
   { iata: "EDI", icao: "EGPH", name: "Edinburgh Airport", city: "Edinburgh", country: "GB", lat: 55.9500, lon: -3.3725, elevation_ft: 135 },
