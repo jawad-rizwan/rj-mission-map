@@ -6,7 +6,6 @@ import { EnvironmentControls } from './EnvironmentControls';
 import { MissionPanel } from './MissionPanel';
 import { FieldPerformancePanel } from './FieldPerformancePanel';
 import { ResultsPanel } from './ResultsPanel';
-import { PayloadRangePanel } from './PayloadRangePanel';
 
 export function Sidebar() {
   return (
@@ -25,7 +24,6 @@ export function Sidebar() {
         <MissionPanel />
         <FieldPerformancePanel />
         <ResultsPanel />
-        <PayloadRangePanel />
       </div>
     </aside>
   );

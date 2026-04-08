@@ -56,6 +56,20 @@ npm run dev
 
 Open http://localhost:5173 in your browser.
 
+## Payload-Range Chart
+
+Generate a standalone payload-range PNG for `ZRJ70` and `ZRJ100` with:
+
+```bash
+python3 scripts/generate_payload_range.py
+```
+
+Default output:
+
+```text
+charts/payload_range_zrj70_zrj100.png
+```
+
 ## Project Structure
 
 ```
