@@ -83,6 +83,7 @@ export const RUNWAYS: Runway[] = [
 
   // ── Europe ──────────────────────────────────────────────────────────────
   { icao: "EGLL", designation: "09R/27L", lengthFt: 12799, widthFt: 164, surface: "asphalt" },
+  { icao: "EGLC", designation: "09/27",   lengthFt: 4948,  widthFt: 98,  surface: "asphalt" },
   { icao: "LFPG", designation: "09R/27L", lengthFt: 13829, widthFt: 148, surface: "asphalt" },
   { icao: "EDDF", designation: "07C/25C", lengthFt: 13123, widthFt: 148, surface: "concrete" },
   { icao: "EHAM", designation: "18R/36L", lengthFt: 12467, widthFt: 148, surface: "asphalt" },
@@ -100,6 +101,7 @@ export const RUNWAYS: Runway[] = [
   { icao: "LPPT", designation: "03/21",   lengthFt: 12484, widthFt: 148, surface: "asphalt" },
   { icao: "LEBL", designation: "07R/25L", lengthFt: 10499, widthFt: 148, surface: "asphalt" },
   { icao: "LGAV", designation: "03R/21L", lengthFt: 13123, widthFt: 148, surface: "concrete" },
+  { icao: "LSGG", designation: "04/22",   lengthFt: 12795, widthFt: 164, surface: "concrete" },
   { icao: "LIRQ", designation: "05/23",   lengthFt: 5118,  widthFt: 98,  surface: "asphalt" },
 
   // ── Latin America ───────────────────────────────────────────────────────
