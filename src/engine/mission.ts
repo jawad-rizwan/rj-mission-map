@@ -13,7 +13,7 @@
 
 import {
   type AircraftConfig,
-  K, ldMax, totalThrustSL, crewWeight,
+  K, ldMax, totalThrustSL, crewWeight, oew,
 } from './aircraft';
 import { isa, tasFromMach, dynamicPressureMach, thrustLapse } from './atmosphere';
 import { RHO_SL, NM_TO_FT, KTS_TO_FPS } from './constants';
@@ -334,6 +334,12 @@ export interface RouteResult {
   cruiseFuel: number;
 }
 
+export interface PayloadRangePoint {
+  payloadLb: number;
+  fuelLb: number;
+  rangeNm: number;
+}
+
 /**
  * Compute flight time and fuel for a specific route distance.
  * Uses the same climb + Breguet model but for a known distance
@@ -392,4 +398,35 @@ export function computeRouteMetrics(
     fuelRequired: fuelTO + climb.fuelBurned + cruiseFuel,
     cruiseFuel,
   };
+}
+
+export function computePayloadRangeCurve(
+  ac: AircraftConfig,
+  windKts: number = 0,
+  samples: number = 25,
+): PayloadRangePoint[] {
+  const points: PayloadRangePoint[] = [];
+  const base = oew(ac);
+
+  for (let i = 0; i < samples; i++) {
+    const ratio = samples === 1 ? 0 : i / (samples - 1);
+    const payloadLb = ac.maxPayload * (1 - ratio);
+    const fuelLb = Math.min(ac.fuelTankCapacity, ac.mtowLimit - base - payloadLb);
+    if (fuelLb <= 0) {
+      continue;
+    }
+
+    const mission = computeRange(ac, payloadLb, fuelLb, windKts);
+    if (!mission.feasible) {
+      continue;
+    }
+
+    points.push({
+      payloadLb,
+      fuelLb,
+      rangeNm: mission.rangeNm,
+    });
+  }
+
+  return points;
 }
