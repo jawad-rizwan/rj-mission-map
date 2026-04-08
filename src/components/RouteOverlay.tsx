@@ -7,9 +7,10 @@ import type { Airport } from '../data/airports';
 interface Props {
   from: Airport;
   to: Airport;
+  showPersistentLabel?: boolean;
 }
 
-export function RouteOverlay({ from, to }: Props) {
+export function RouteOverlay({ from, to, showPersistentLabel = true }: Props) {
   const { fmtDist } = useUnits();
 
   const arc = useMemo(
@@ -32,7 +33,12 @@ export function RouteOverlay({ from, to }: Props) {
           dashArray: '8, 6',
         }}
       >
-        <Tooltip direction="top" sticky>
+        <Tooltip
+          direction="top"
+          sticky={!showPersistentLabel}
+          permanent={showPersistentLabel}
+          className={showPersistentLabel ? 'route-range-window' : undefined}
+        >
           {from.iata} → {to.iata}: {fmtDist(distNm)}
         </Tooltip>
       </Polyline>
