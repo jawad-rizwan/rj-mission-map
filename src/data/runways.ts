@@ -100,6 +100,7 @@ export const RUNWAYS: Runway[] = [
   { icao: "LPPT", designation: "03/21",   lengthFt: 12484, widthFt: 148, surface: "asphalt" },
   { icao: "LEBL", designation: "07R/25L", lengthFt: 10499, widthFt: 148, surface: "asphalt" },
   { icao: "LGAV", designation: "03R/21L", lengthFt: 13123, widthFt: 148, surface: "concrete" },
+  { icao: "LIRQ", designation: "05/23",   lengthFt: 5118,  widthFt: 98,  surface: "asphalt" },
 
   // ── Latin America ───────────────────────────────────────────────────────
   { icao: "MMMX", designation: "05R/23L", lengthFt: 12966, widthFt: 148, surface: "asphalt" },
