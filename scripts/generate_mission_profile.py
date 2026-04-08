@@ -14,6 +14,10 @@ import matplotlib.pyplot as plt
 import generate_payload_range as model
 
 
+def display_name(name: str) -> str:
+    return model.display_name(name)
+
+
 @dataclass
 class Segment:
     name: str
@@ -38,6 +42,10 @@ class ProfileResult:
     reserve_fuel_lb: float
     w0: float
     segments: list[Segment]
+
+
+def show_time_on_chart(seg: Segment) -> bool:
+    return seg.name.startswith("Contingency") or seg.name.startswith("Regulatory Hold")
 
 
 def compute_cruise_segment(
@@ -309,7 +317,7 @@ def plot_profile(result: ProfileResult, ac: model.AircraftConfig, output_path: P
         info = []
         if seg.distance_nm > 0:
             info.append(f"{seg.distance_nm:,.0f} nm")
-        if seg.time_min > 0:
+        if show_time_on_chart(seg) and seg.time_min > 0:
             info.append(f"{seg.time_min:,.0f} min")
         info.append(f"{seg.fuel_burned:,.0f} lb")
         ax.text(
@@ -354,7 +362,7 @@ def plot_profile(result: ProfileResult, ac: model.AircraftConfig, output_path: P
     ax.set_xlim(-0.3, x_points[-1] + 0.8)
     ax.set_ylim(-cruise_alt * 0.28, cruise_alt * 1.35)
     ax.set_ylabel("Altitude [ft]")
-    ax.set_title(f"Mission Profile — {result.aircraft_name} ({result.profile_name})", fontweight="bold")
+    ax.set_title(f"Mission Profile — {display_name(result.aircraft_name)} ({result.profile_name})", fontweight="bold")
     ax.set_xticks([])
     ax.set_xlabel("(not to scale)")
     ax.grid(axis="y", alpha=0.2)

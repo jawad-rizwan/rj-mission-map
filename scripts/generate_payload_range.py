@@ -101,6 +101,14 @@ ZRJ100 = AircraftConfig(
 )
 
 
+def display_name(name: str) -> str:
+    if name == "ZRJ70":
+        return "ZRJ-70"
+    if name == "ZRJ100":
+        return "ZRJ-100"
+    return name
+
+
 def crew_weight(ac: AircraftConfig) -> float:
     return (ac.n_pilots + ac.n_flight_attendants) * ac.person_weight
 
@@ -313,8 +321,8 @@ def compute_payload_range_curve(ac: AircraftConfig, wind_kts: float = 0.0, sampl
 
 def plot_payload_range(output_path: Path, wind_kts: float, samples: int) -> None:
     curves = [
-        ("ZRJ70", ZRJ70, "#1f77b4"),
-        ("ZRJ100", ZRJ100, "#ff7f0e"),
+        (display_name("ZRJ70"), ZRJ70, "#1f77b4"),
+        (display_name("ZRJ100"), ZRJ100, "#ff7f0e"),
     ]
     data = [(label, ac, color, compute_payload_range_curve(ac, wind_kts, samples)) for label, ac, color in curves]
 
