@@ -70,6 +70,21 @@ Default output:
 charts/payload_range_zrj70_zrj100.png
 ```
 
+## Mission Profile Charts
+
+Generate Raymer-style mission-profile PNGs for the mission-map model with:
+
+```bash
+python3 scripts/generate_mission_profile.py
+```
+
+Default outputs:
+
+```text
+charts/mission_profile_zrj70_max_payload.png
+charts/mission_profile_zrj100_max_payload.png
+```
+
 ## Project Structure
 
 ```
