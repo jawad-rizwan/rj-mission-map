@@ -28,9 +28,9 @@ The range computation is a simplified single-pass approximation of the full 9-se
 
 | Variant | Engine Result | Reference | Error |
 |---------|--------------|-----------|-------|
-| ZRJ50 @ 65,000 lb | 448 nm | 446 nm | +0.4% |
-| ZRJ70 @ 85,632 lb | 1,883 nm | 1,883 nm | 0.0% |
-| ZRJ100 @ 93,872 lb | 1,618 nm | 1,618 nm | 0.0% |
+| ZRJ50 @ 65,000 lb | 588 nm | 587 nm | +0.2% |
+| ZRJ70 @ 84,059 lb | 1,803 nm | 1,803 nm | 0.0% |
+| ZRJ100 @ 92,484 lb | 1,505 nm | 1,504 nm | +0.1% |
 
 ## Aircraft Data
 
@@ -39,11 +39,12 @@ All constants sourced from `rj-mission-analysis` (canonical upstream):
 | | ZRJ50 | ZRJ70 | ZRJ100 |
 |---|---|---|---|
 | Seats | 50 | 76 | 100 |
-| OEW | 45,623 lb | 45,820 lb | 48,315 lb |
-| MTOW | 65,000 lb | 86,000 lb | ~100,000 lb |
-| Max Fuel | 19,465 lb | 19,465 lb | 19,465 lb |
+| OEW | 44,765 lb | 44,962 lb | 47,892 lb |
+| MTOW | 65,000 lb | 84,059 lb | 92,484 lb |
+| Fuel tank | 19,000 lb | 19,000 lb | 19,000 lb |
+| Max fuel @ full payload | 8,885 lb | 18,750 lb | 18,500 lb |
 | Cruise | M0.78 @ FL350 | M0.78 @ FL350 | M0.78 @ FL350 |
-| (L/D)max | 15.55 | 15.55 | 15.27 |
+| (L/D)max | 15.50 | 15.50 | 15.23 |
 | Engine | 2x PW1200G GTF, 38,380 lb total thrust |
 
 ## Quick Start

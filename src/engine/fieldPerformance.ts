@@ -4,7 +4,7 @@
  * Raymer Ch.17 equations with FAR 25 factors.
  */
 
-import { G, RHO_SL } from './constants';
+import { G } from './constants';
 import { isaWithDeviation, densityAltitude, thrustAtAltitude } from './atmosphere';
 import { type AircraftConfig, totalThrustSL, K as acK } from './aircraft';
 
@@ -165,7 +165,7 @@ const T_REACT = 2.0; // pilot reaction time [s]
 function accelerateStopDistance(
   W: number, S: number, T: number, cd0: number, clGround: number,
   k: number, muRoll: number, muBrake: number, rho: number,
-  clMaxTO: number, vEF: number,
+  vEF: number,
 ): number {
   const sAccel = groundRollToV(W, S, T, cd0, clGround, k, muRoll, rho, 0, vEF);
   const sReact = vEF * T_REACT;
@@ -237,7 +237,7 @@ function findV1andBFL(
 
   for (let i = 0; i < 60; i++) {
     const vMid = 0.5 * (vLo + vHi);
-    const asd = accelerateStopDistance(W, S, T, cd0, clGround, k, muRoll, muBrake, rho, clMaxTO, vMid);
+    const asd = accelerateStopDistance(W, S, T, cd0, clGround, k, muRoll, muBrake, rho, vMid);
     const agd = accelerateGoDistance(W, S, T, cd0, clGround, k, muRoll, rho, clMaxTO, hObstacle, vMid, nEngines);
 
     if (asd < agd) {
@@ -251,7 +251,7 @@ function findV1andBFL(
   const v1Balanced = 0.5 * (vLo + vHi);
   const v1 = Math.max(v1Balanced, vMCG);
 
-  const asdFinal = accelerateStopDistance(W, S, T, cd0, clGround, k, muRoll, muBrake, rho, clMaxTO, v1);
+  const asdFinal = accelerateStopDistance(W, S, T, cd0, clGround, k, muRoll, muBrake, rho, v1);
   const agdFinal = accelerateGoDistance(W, S, T, cd0, clGround, k, muRoll, rho, clMaxTO, hObstacle, v1, nEngines);
 
   return { v1, bfl: Math.max(asdFinal, agdFinal) };

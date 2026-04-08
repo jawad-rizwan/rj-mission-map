@@ -1,5 +1,4 @@
 import { useAppState, useAppDispatch } from '../store/appState';
-import type { UnitSystem } from '../engine/units';
 
 function ToggleButton<T extends string>({
   options,

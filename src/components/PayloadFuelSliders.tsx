@@ -5,13 +5,12 @@ import { useUnits } from '../hooks/useUnits';
 export function PayloadFuelSliders() {
   const { aircraftKey, payloadLb, fuelLb } = useAppState();
   const dispatch = useAppDispatch();
-  const { fmtWeight, convWeight, weightLabel } = useUnits();
+  const { fmtWeight } = useUnits();
 
   const ac = ALL_AIRCRAFT[aircraftKey];
   const base = oew(ac);
   const w0 = base + payloadLb + fuelLb;
   const maxFuel = Math.min(ac.fuelTankCapacity, ac.mtowLimit - base - payloadLb);
-  const maxPayload = Math.min(ac.maxPayload, ac.mtowLimit - base - fuelLb);
   const mtowPct = Math.min(100, (w0 / ac.mtowLimit) * 100);
 
   return (

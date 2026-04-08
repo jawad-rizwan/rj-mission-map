@@ -228,7 +228,6 @@ export function computeRange(
   const vGroundKts = groundSpeedKts(ac.cruiseMach, ac.cruiseAlt, windKts);
   if (vGroundKts <= 0) return infeasible;
   const vTasKts = tasFromMach(ac.cruiseMach, ac.cruiseAlt) / KTS_TO_FPS;
-  const vTasFps = tasFromMach(ac.cruiseMach, ac.cruiseAlt);
 
   // Effective TSFC absorbing 10% contingency loiter
   const contingencyFactor = 0.10 * (ac.tsfcLoiter / ac.tsfcCruise) * (ldCruise / acLdMax);

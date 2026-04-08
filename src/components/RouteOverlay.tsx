@@ -22,9 +22,6 @@ export function RouteOverlay({ from, to }: Props) {
     [from.lat, from.lon, to.lat, to.lon],
   );
 
-  const midIdx = Math.floor(arc.length / 2);
-  const midPoint = arc[midIdx];
-
   return (
     <>
       <Polyline
