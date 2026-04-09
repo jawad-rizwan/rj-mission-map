@@ -4,7 +4,9 @@ from __future__ import annotations
 import argparse
 import math
 import os
+import re
 from dataclasses import dataclass
+from functools import lru_cache
 from pathlib import Path
 
 os.environ.setdefault("MPLCONFIGDIR", "/tmp/matplotlib-rj-mission-map")
@@ -44,8 +46,29 @@ class ProfileResult:
     segments: list[Segment]
 
 
-def show_time_on_chart(seg: Segment) -> bool:
-    return seg.name.startswith("Contingency") or seg.name.startswith("Regulatory Hold")
+@dataclass(frozen=True)
+class ClimbOverride:
+    time_min: float
+    fuel_lb: float
+
+
+@lru_cache(maxsize=1)
+def load_flight_perf_climb_overrides() -> dict[str, ClimbOverride]:
+    analysis_path = Path(__file__).resolve().parents[2] / "rj-flight-performance" / "examples" / "output" / "ZRJ" / "analysis.txt"
+    if not analysis_path.exists():
+        return {}
+
+    text = analysis_path.read_text()
+    pattern = re.compile(
+        r"Aircraft\s+:\s+(ZRJ70|ZRJ100).*?"
+        r"Total time to climb\s+:\s+([0-9.]+)\s+min.*?"
+        r"Est\. fuel to climb\s+:\s+([0-9,]+)\s+lb",
+        re.DOTALL,
+    )
+    overrides: dict[str, ClimbOverride] = {}
+    for name, time_min, fuel_lb in pattern.findall(text):
+        overrides[name] = ClimbOverride(time_min=float(time_min), fuel_lb=float(fuel_lb.replace(",", "")))
+    return overrides
 
 
 def compute_cruise_segment(
@@ -124,6 +147,14 @@ def compute_climb_segment(
     name: str,
 ) -> Segment:
     fuel, dist, time_sec, w_end = model.compute_climb(ac, w_start)
+    if name == "Climb to FL350":
+        override = load_flight_perf_climb_overrides().get(ac.name)
+        if override is not None and fuel > 0:
+            fuel_scale = override.fuel_lb / fuel
+            fuel = override.fuel_lb
+            time_sec = override.time_min * 60.0
+            w_end = w_start - fuel
+            dist *= fuel_scale
     return Segment(
         name=name,
         w_start=w_start,
@@ -303,61 +334,47 @@ def plot_profile(result: ProfileResult, ac: model.AircraftConfig, output_path: P
         x_mid = (x_points[idx] + x_points[idx + 1]) / 2.0
         label = short_labels.get(seg.name, seg.name)
         if seg.name.startswith("Cruise to Destination"):
-            label = f"Cruise\n({seg.distance_nm:.0f} nm)"
+            label = "Cruise"
         elif seg.name.startswith("Divert to Alternate"):
-            label = f"Divert\n({seg.distance_nm:.0f} nm)"
+            label = "Divert"
         elif seg.name.startswith("Contingency"):
             label = "Contingency"
 
-        ax.text(x_mid, -cruise_alt * 0.13, label, ha="center", va="top", fontsize=6.5, color="#333333")
-
-    for idx, seg in enumerate(segs):
-        x_mid = (x_points[idx] + x_points[idx + 1]) / 2.0
-        a_top = max(alt_points[idx], alt_points[idx + 1])
-        info = []
-        if seg.distance_nm > 0:
-            info.append(f"{seg.distance_nm:,.0f} nm")
-        if show_time_on_chart(seg) and seg.time_min > 0:
-            info.append(f"{seg.time_min:,.0f} min")
-        info.append(f"{seg.fuel_burned:,.0f} lb")
         ax.text(
             x_mid,
-            a_top + cruise_alt * 0.05,
-            "\n".join(info),
+            -cruise_alt * 0.135,
+            label,
             ha="center",
-            va="bottom",
-            fontsize=5.5,
-            color="#555555",
-            linespacing=1.25,
+            va="top",
+            fontsize=6.5,
+            color="#333333",
         )
-
-    summary = (
-        f"W0 = {result.w0:,.0f} lb    "
-        f"Payload = {result.payload_lb:,.0f} lb    "
-        f"Loaded Fuel = {result.loaded_fuel_lb:,.0f} lb    "
-        f"Range = {result.total_range_nm:,.0f} nm"
-    )
-    footer = (
-        f"Trip Fuel = {result.trip_fuel_lb:,.0f} lb    "
-        f"Reserve = {result.reserve_fuel_lb:,.0f} lb    "
-        f"Usable Fuel = {result.usable_fuel_lb:,.0f} lb"
-    )
-    ax.text(
-        0.5,
-        -0.15,
-        f"{summary}\n{footer}",
-        transform=ax.transAxes,
-        fontsize=7,
-        va="top",
-        ha="center",
-        family="monospace",
-        bbox={"boxstyle": "round,pad=0.4", "fc": "#f5f5f5", "ec": "#cccccc"},
-    )
 
     ax.axhline(cruise_alt, color="#999999", linestyle=":", linewidth=0.8, alpha=0.5)
     ax.text(x_points[-1] + 0.15, cruise_alt, f"FL{int(cruise_alt / 100)}", fontsize=7, va="center", color="#999999")
     ax.axvline(4.0, color="#d62728", linestyle="--", linewidth=0.8, alpha=0.4)
-    ax.text(4.02, cruise_alt * 1.18, "Reserve start", fontsize=6.5, color="#d62728", rotation=90, va="top")
+    ax.text(
+        4.02,
+        cruise_alt * 1.18,
+        "Reserve start",
+        fontsize=6.5,
+        color="#d62728",
+        rotation=90,
+        va="top",
+    )
+
+    wind_label = "No wind" if abs(wind_kts) < 1e-9 else f"Wind {wind_kts:+.0f} kt"
+    ax.text(
+        0.99,
+        -0.06,
+        f"{wind_label}, M{ac.cruise_mach:.2f}, FAR 121.645-style dispatch model",
+        transform=ax.transAxes,
+        ha="right",
+        va="bottom",
+        fontsize=6.5,
+        color="#666666",
+        clip_on=False,
+    )
 
     ax.set_xlim(-0.3, x_points[-1] + 0.8)
     ax.set_ylim(-cruise_alt * 0.28, cruise_alt * 1.35)
@@ -369,18 +386,6 @@ def plot_profile(result: ProfileResult, ac: model.AircraftConfig, output_path: P
     ax.spines["top"].set_visible(False)
     ax.spines["right"].set_visible(False)
     ax.spines["bottom"].set_visible(False)
-
-    wind_label = "No wind" if abs(wind_kts) < 1e-9 else f"Wind {wind_kts:+.0f} kt"
-    ax.text(
-        0.99,
-        0.02,
-        f"{wind_label}, M{ac.cruise_mach:.2f}, FAR 121.645-style dispatch model",
-        transform=ax.transAxes,
-        ha="right",
-        va="bottom",
-        fontsize=6.5,
-        color="#666666",
-    )
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
     fig.tight_layout()
