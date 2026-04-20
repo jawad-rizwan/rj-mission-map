@@ -424,6 +424,8 @@ html, body, #root {
   top: 12px;
   right: 12px;
   display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
   gap: 8px;
   z-index: 1200;
   background: rgba(12, 18, 30, 0.84);
@@ -459,6 +461,58 @@ html, body, #root {
 .map-toggle-btn:disabled {
   opacity: 0.45;
   cursor: not-allowed;
+}
+
+.dispatch-overlay-legend {
+  position: absolute;
+  left: 12px;
+  bottom: 12px;
+  z-index: 1200;
+  min-width: 360px;
+  background: rgba(10, 15, 25, 0.9);
+  border: 1px solid rgba(120, 156, 201, 0.32);
+  border-radius: 14px;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(4px);
+  padding: 14px 16px;
+}
+
+.dispatch-overlay-title {
+  color: #f1f6fc;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.dispatch-overlay-subtitle {
+  color: #9cb2c8;
+  font-size: 0.8rem;
+  margin-top: 4px;
+  margin-bottom: 12px;
+}
+
+.dispatch-overlay-row {
+  display: grid;
+  grid-template-columns: 40px 1fr;
+  align-items: center;
+  gap: 12px;
+  color: #e1ebf7;
+  font-size: 0.9rem;
+  padding: 6px 0;
+}
+
+.dispatch-overlay-swatch {
+  display: block;
+  width: 40px;
+  border-top: 4px solid currentColor;
+}
+
+.dispatch-overlay-swatch.dashed {
+  border-top-style: dashed;
+}
+
+.dispatch-overlay-label {
+  font-variant-numeric: tabular-nums;
 }
 
 .airfield-info-window {
@@ -519,4 +573,13 @@ html, body, #root {
 .sidebar-content::-webkit-scrollbar-thumb {
   background: #2c3e6d;
   border-radius: 2px;
+}
+
+@media (max-width: 900px) {
+  .dispatch-overlay-legend {
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    min-width: 0;
+  }
 }
